@@ -1,0 +1,70 @@
+﻿@font-face {
+  font-family: 'Vend Sans';
+  font-style: italic;
+  font-weight: 300;
+  font-display: swap;
+  src: url(s/vendsans/v1/E210_d7ijufNwCJPEUscURVbAh5_70mGv5HpeXTDRA.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Vend Sans';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url(s/vendsans/v1/E210_d7ijufNwCJPEUscURVbAh5_70mGv5HpJ3TDRA.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Vend Sans';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url(s/vendsans/v1/E210_d7ijufNwCJPEUscURVbAh5_70mGv5HpFXTDRA.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Vend Sans';
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url(s/vendsans/v1/E210_d7ijufNwCJPEUscURVbAh5_70mGv5Hp-XPDRA.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Vend Sans';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url(s/vendsans/v1/E210_d7ijufNwCJPEUscURVbAh5_70mGv5HpwHPDRA.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Vend Sans';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url(s/vendsans/v1/E212_d7ijufNwCJPEUs2WCek2ncUdeeBqgeqzzc.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Vend Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(s/vendsans/v1/E212_d7ijufNwCJPEUs2WCek2ncUdeeBqlmqzzc.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Vend Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(s/vendsans/v1/E212_d7ijufNwCJPEUs2WCek2ncUdeeBqmuqzzc.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Vend Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(s/vendsans/v1/E212_d7ijufNwCJPEUs2WCek2ncUdeeBqoetzzc.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Vend Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(s/vendsans/v1/E212_d7ijufNwCJPEUs2WCek2ncUdeeBqr6tzzc.ttf) format('truetype');
+}

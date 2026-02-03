@@ -40,7 +40,7 @@ class AuthController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Registration successful!',
-                'redirect' => url('/dashboard')  // Changed from route('home')
+                'redirect' => route('dashboard')  // Changed from route('home')
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -78,7 +78,7 @@ class AuthController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Login successful!',
-                'redirect' => url('/dashboard')  // Changed from route('home')
+                'redirect' => route('dashboard')  // Changed from route('home')
             ]);
         }
 

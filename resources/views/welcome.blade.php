@@ -1214,6 +1214,7 @@
     <script src="{{ asset('assets/js/ScrollTrigger.min.js') }}"></script>
     <script src="{{ asset('assets/js/SplitText.min.js') }}"></script>
     <script src="{{ asset('assets/js/main.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
     <script>
@@ -1300,8 +1301,15 @@
                     },
                     success: function(data) {
                         if (data.success) {
-                            alert('Login successful!');
-                            window.location.href = data.redirect || '/dashboard';
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Login Successful',
+                                text: data.message,
+                                timer: 1500,
+                                showConfirmButton: false
+                            }).then(() => {
+                                window.location.href = data.redirect;
+                            });
                         } else {
                             alert(data.message ||
                                 'Login failed. Please check your credentials.');
