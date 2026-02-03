@@ -10,7 +10,7 @@
 
                 <div class="text-end">
                     <ol class="breadcrumb m-0 py-0">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">OTT Admin</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">OTT Admin</a></li>
                         <li class="breadcrumb-item active">Platforms</li>
                     </ol>
                 </div>

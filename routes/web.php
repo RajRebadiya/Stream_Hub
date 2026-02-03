@@ -48,18 +48,22 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
         Route::delete('/{platform}', [PlatformController::class, 'destroy'])->name('destroy');
         Route::post('/{platform}/toggle-status', [PlatformController::class, 'toggleStatus'])->name('toggle-status');
     });
+    Route::post('platforms/{platform}/toggle-status', [PlatformController::class, 'toggleStatus'])->name('platforms.toggle-status');
 
     // Subscription Plans
-    Route::prefix('plans')->name('plans.')->group(function () {
+    Route::prefix('plans')->name('subscription-plans.')->group(function () {
         Route::get('/', [SubscriptionPlanController::class, 'index'])->name('index');
         Route::get('/create', [SubscriptionPlanController::class, 'create'])->name('create');
         Route::post('/', [SubscriptionPlanController::class, 'store'])->name('store');
-        Route::get('/{plan}/edit', [SubscriptionPlanController::class, 'edit'])->name('edit');
-        Route::put('/{plan}', [SubscriptionPlanController::class, 'update'])->name('update');
-        Route::delete('/{plan}', [SubscriptionPlanController::class, 'destroy'])->name('destroy');
-        Route::post('/{plan}/toggle-status', [SubscriptionPlanController::class, 'toggleStatus'])->name('toggle-status');
-        Route::post('/{plan}/update-stock', [SubscriptionPlanController::class, 'updateStock'])->name('update-stock');
+        Route::get('/{subscriptionPlan}', [SubscriptionPlanController::class, 'show'])->name('show');
+        Route::get('/{subscriptionPlan}/edit', [SubscriptionPlanController::class, 'edit'])->name('edit');
+        Route::put('/{subscriptionPlan}', [SubscriptionPlanController::class, 'update'])->name('update');
+        Route::delete('/{subscriptionPlan}', [SubscriptionPlanController::class, 'destroy'])->name('destroy');
+        Route::post('/{subscriptionPlan}/toggle-status', [SubscriptionPlanController::class, 'toggleStatus'])->name('toggle-status');
+        Route::post('/{subscriptionPlan}/update-stock', [SubscriptionPlanController::class, 'updateStock'])->name('update-stock');
     });
+    Route::post('subscription-plans/{subscriptionPlan}/toggle-status', [SubscriptionPlanController::class, 'toggleStatus'])->name('subscription-plans.toggle-status');
+    Route::post('subscription-plans/{subscriptionPlan}/update-stock', [SubscriptionPlanController::class, 'updateStock'])->name('subscription-plans.update-stock');
 
     // Subscription Credentials
     Route::prefix('credentials')->name('credentials.')->group(function () {

@@ -12,21 +12,21 @@
     <meta name="author" content="Coderthemes" />
 
     <!-- App favicon -->
-    <link rel="shortcut icon" href="{{ 'assets/images/favicon.ico' }}" />
+    <link rel="shortcut icon" href="{{ asset('admin/assets/images/favicon.ico') }}" />
 
 
     <!-- Vector Maps css -->
-    <link href="{{ 'assets/plugins/jsvectormap/jsvectormap.min.css' }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('admin/assets/plugins/jsvectormap/jsvectormap.min.css') }}" rel="stylesheet" type="text/css" />
 
     <!-- Theme Config Js -->
-    <script src="{{ 'assets/js/config.js' }}"></script>
+    <script src="{{ asset('admin/assets/js/config.js') }}"></script>
     <script src="demo.js"></script>
 
     <!-- Vendor css -->
-    <link href="{{ 'assets/css/vendors.min.css' }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('admin/assets/css/vendors.min.css') }}" rel="stylesheet" type="text/css" />
 
     <!-- App css -->
-    <link href="{{ 'assets/css/app.min.css' }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('admin/assets/css/app.min.css') }}" rel="stylesheet" type="text/css" />
 
 </head>
 
@@ -735,25 +735,25 @@
     </div>
     <!-- end offcanvas-->
     <!-- Vendor js -->
-    <script src="{{ 'assets/js/vendors.min.js' }}"></script>
+    <script src="{{ asset('admin/assets/js/vendors.min.js') }}"></script>
 
     <!-- App js -->
-    <script src="{{ 'assets/js/app.js' }}"></script>
+    <script src="{{ asset('admin/assets/js/app.js') }}"></script>
 
 
     <!-- Apex Chart js -->
-    <script src="{{ 'assets/plugins/apexcharts/apexcharts.min.js' }}"></script>
+    <script src="{{ asset('admin/assets/plugins/apexcharts/apexcharts.min.js') }}"></script>
 
     <!-- Vector Map Js -->
-    <script src="{{ 'assets/plugins/jsvectormap/jsvectormap.min.js' }}"></script>
-    <script src="{{ 'assets/js/maps/world-merc.js' }}"></script>
-    <script src="{{ 'assets/js/maps/world.js' }}"></script>
+    <script src="{{ asset('admin/assets/plugins/jsvectormap/jsvectormap.min.js') }}"></script>
+    <script src="{{ asset('admin/assets/js/maps/world-merc.js') }}"></script>
+    <script src="{{ asset('admin/assets/js/maps/world.js') }}"></script>
 
     <!-- Custom table -->
-    <script src="{{ 'assets/js/pages/custom-table.js' }}"></script>
+    <script src="{{ asset('admin/assets/js/pages/custom-table.js') }}"></script>
 
     <!-- Dashboard js -->
-    <script src="{{ 'assets/js/pages/dashboard-analytics.js' }}"></script>
+    <script src="{{ asset('admin/assets/js/pages/dashboard-analytics.js') }}"></script>
 </body>
 
 </html>

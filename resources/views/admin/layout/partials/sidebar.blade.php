@@ -3,13 +3,13 @@
     <!-- Brand Logo -->
     <a href="index.html" class="logo">
         <span class="logo logo-light">
-            <span class="logo-lg"><img src="assets/images/logo.png" alt="logo" /></span>
-            <span class="logo-sm"><img src="assets/images/logo-sm.png" alt="small logo" /></span>
+            <span class="logo-lg"><img src="{{ asset('admin/assets/images/logo.png') }}" alt="logo" /></span>
+            <span class="logo-sm"><img src="{{ asset('admin/assets/images/logo-sm.png') }}" alt="small logo" /></span>
         </span>
 
         <span class="logo logo-dark">
-            <span class="logo-lg"><img src="assets/images/logo-black.png" alt="dark logo" /></span>
-            <span class="logo-sm"><img src="assets/images/logo-sm.png" alt="small logo" /></span>
+            <span class="logo-lg"><img src="{{ asset('admin/assets/images/logo-black.png') }}" alt="dark logo" /></span>
+            <span class="logo-sm"><img src="{{ asset('admin/assets/images/logo-sm.png') }}" alt="small logo" /></span>
         </span>
     </a>
 
@@ -28,7 +28,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <a href="#!" class="link-reset">
-                        <img src="assets/images/users/user-1.jpg" alt="user-image"
+                        <img src="{{ asset('admin/assets/images/users/user-1.jpg') }}" alt="user-image"
                             class="rounded-circle mb-2 avatar-md" />
                         <span class="sidenav-user-name fw-bold">David Dev</span>
                         <span class="fs-12 fw-semibold" data-lang="user-role">Art Director</span>
@@ -119,10 +119,10 @@
                     <div class="collapse" id="sidebarPlans">
                         <ul class="sub-menu">
                             <li class="side-nav-item active">
-                                <a href="{{ route('admin.plans.index') }}" class="side-nav-link">All Plans</a>
+                                <a href="{{ route('admin.subscription-plans.index') }}" class="side-nav-link">All Plans</a>
                             </li>
                             <li class="side-nav-item active">
-                                <a href="{{ route('admin.plans.create') }}" class="side-nav-link">Add New Plan</a>
+                                <a href="{{ route('admin.subscription-plans.create') }}" class="side-nav-link">Add New Plan</a>
                             </li>
                         </ul>
                     </div>
@@ -151,7 +151,8 @@
                                     class="side-nav-link">Available</a>
                             </li>
                             <li class="side-nav-item active">
-                                <a href="{{ route('admin.credentials.assigned') }}" class="side-nav-link">Assigned</a>
+                                <a href="{{ route('admin.credentials.assigned') }}"
+                                    class="side-nav-link">Assigned</a>
                             </li>
                         </ul>
                     </div>
