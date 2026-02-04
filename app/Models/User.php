@@ -89,4 +89,59 @@ class User extends Authenticatable
     {
         return $this->hasMany(SubscriptionCredential::class, 'assigned_to_user_id');
     }
+
+    /**
+     * Scope a query to only include users with active profiles.
+     */
+    public function scopeActiveUsers($query)
+    {
+        return $query->whereHas('profile', function ($q) {
+            $q->where('status', 'active');
+        });
+    }
+
+    /**
+     * Scope a query to only include verified users.
+     */
+    public function scopeVerified($query)
+    {
+        return $query->whereNotNull('email_verified_at');
+    }
+
+    /**
+     * Get user's initials for avatar.
+     */
+    public function getInitialsAttribute()
+    {
+        $words = explode(' ', $this->name);
+        if (count($words) >= 2) {
+            return strtoupper(substr($words[0], 0, 1) . substr($words[1], 0, 1));
+        }
+        return strtoupper(substr($this->name, 0, 2));
+    }
+
+    /**
+     * Check if user has verified email.
+     */
+    public function hasVerifiedEmail()
+    {
+        return !is_null($this->email_verified_at);
+    }
+
+    /**
+     * Check if user has active profile.
+     */
+    public function hasActiveProfile()
+    {
+        return $this->profile && $this->profile->status === 'active';
+    }
+
+    /**
+     * Get user's full name with profile status.
+     */
+    public function getFullNameWithStatusAttribute()
+    {
+        $status = $this->profile ? ($this->profile->status === 'active' ? 'Active' : 'Inactive') : 'No Profile';
+        return $this->name . ' (' . $status . ')';
+    }
 }

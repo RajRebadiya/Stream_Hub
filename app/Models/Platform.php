@@ -18,6 +18,7 @@ class Platform extends Model
         'is_active',
         'sort_order',
         'status',
+        'token',
     ];
 
     protected $casts = [

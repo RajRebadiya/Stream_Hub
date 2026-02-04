@@ -78,6 +78,14 @@
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
+                                    <div class="col-md-12 mb-3">
+                                        <label for="token" class="form-label">Token</label>
+                                        <textarea class="form-control @error('token') is-invalid @enderror" id="token" name="token" rows="4"
+                                            placeholder="Enter platform token">{{ old('token', $platform->token) }}</textarea>
+                                        @error('token')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
 
                                     <div class="col-md-6 mb-3">
                                         <label for="logo" class="form-label">Platform Logo</label>

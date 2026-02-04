@@ -108,6 +108,13 @@
                     </div>
                 </li>
 
+                <li class="side-nav-item">
+                    <a href="{{ route('admin.access') }}" class="side-nav-link">
+                        <span class="menu-icon"><i class="ti ti-key"></i></span>
+                        <span class="menu-text">My Access</span>
+                    </a>
+                </li>
+
                 <!-- Subscription Plans -->
                 <li class="side-nav-item">
                     <a data-bs-toggle="collapse" href="#sidebarPlans" aria-expanded="false" aria-controls="sidebarPlans"
@@ -119,10 +126,13 @@
                     <div class="collapse" id="sidebarPlans">
                         <ul class="sub-menu">
                             <li class="side-nav-item active">
-                                <a href="{{ route('admin.subscription-plans.index') }}" class="side-nav-link">All Plans</a>
+                                <a href="{{ route('admin.subscription-plans.index') }}" class="side-nav-link">All
+                                    Plans</a>
                             </li>
                             <li class="side-nav-item active">
-                                <a href="{{ route('admin.subscription-plans.create') }}" class="side-nav-link">Add New Plan</a>
+                                <a href="{{ route('admin.subscription-plans.create') }}" class="side-nav-link">Add
+                                    New
+                                    Plan</a>
                             </li>
                         </ul>
                     </div>
@@ -172,6 +182,9 @@
                                 <a href="{{ route('admin.orders.index') }}" class="side-nav-link">All Orders</a>
                             </li>
                             <li class="side-nav-item active">
+                                <a href="{{ route('admin.orders.create') }}" class="side-nav-link">New Orders</a>
+                            </li>
+                            {{-- <li class="side-nav-item active">
                                 <a href="{{ route('admin.orders.pending') }}" class="side-nav-link">Pending
                                     Orders</a>
                             </li class="side-nav-item active">
@@ -182,7 +195,7 @@
                             <li class="side-nav-item active">
                                 <a href="{{ route('admin.orders.cancelled') }}" class="side-nav-link">Cancelled
                                     Orders</a>
-                            </li>
+                            </li> --}}
                         </ul>
                     </div>
                 </li>
@@ -231,6 +244,27 @@
                             </li>
                             <li class="side-nav-item active">
                                 <a href="{{ route('admin.users.create') }}" class="side-nav-link">Add New User</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <!-- Users Management -->
+                <li class="side-nav-item">
+                    <a data-bs-toggle="collapse" href="#sidebarUsers" aria-expanded="false"
+                        aria-controls="sidebarUsers" class="side-nav-link">
+                        <span class="menu-icon"><i class="ti ti-users"></i></span>
+                        <span class="menu-text">Users Profile</span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse" id="sidebarUsers">
+                        <ul class="sub-menu">
+                            <li class="side-nav-item active">
+                                <a href="{{ route('admin.user-profiles.index') }}" class="side-nav-link">All Users
+                                    Profile</a>
+                            </li>
+                            <li class="side-nav-item active">
+                                <a href="{{ route('admin.user-profiles.create') }}" class="side-nav-link">Add New
+                                    User Profile</a>
                             </li>
                         </ul>
                     </div>

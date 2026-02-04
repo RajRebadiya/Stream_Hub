@@ -27,6 +27,10 @@
 
     <!-- App css -->
     <link href="{{ asset('admin/assets/css/app.min.css') }}" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    @stack('style')
 
 </head>
 
@@ -754,6 +758,8 @@
 
     <!-- Dashboard js -->
     <script src="{{ asset('admin/assets/js/pages/dashboard-analytics.js') }}"></script>
+
+    @stack('script')
 </body>
 
 </html>

@@ -13,6 +13,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SupportTicketController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\UserProfileController;
 
 // Guest Routes (Jo login nahi hai)
 // Route::middleware('guest')->group(function () {
@@ -49,6 +50,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
         Route::post('/{platform}/toggle-status', [PlatformController::class, 'toggleStatus'])->name('toggle-status');
     });
     Route::post('platforms/{platform}/toggle-status', [PlatformController::class, 'toggleStatus'])->name('platforms.toggle-status');
+    Route::get('access', [PlatformController::class, 'access'])->name('access');
+    Route::post('platforms/{id}/generate-token', [PlatformController::class, 'generateToken'])
+        ->name('platforms.generateToken');
+
 
     // Subscription Plans
     Route::prefix('plans')->name('subscription-plans.')->group(function () {
@@ -65,29 +70,40 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::post('subscription-plans/{subscriptionPlan}/toggle-status', [SubscriptionPlanController::class, 'toggleStatus'])->name('subscription-plans.toggle-status');
     Route::post('subscription-plans/{subscriptionPlan}/update-stock', [SubscriptionPlanController::class, 'updateStock'])->name('subscription-plans.update-stock');
 
-    // Subscription Credentials
+    // Subscription Credentials Management Routes
     Route::prefix('credentials')->name('credentials.')->group(function () {
         Route::get('/', [SubscriptionCredentialController::class, 'index'])->name('index');
+        Route::get('/available', [SubscriptionCredentialController::class, 'available'])->name('available');
+        Route::get('/assigned', [SubscriptionCredentialController::class, 'assigned'])->name('assigned');
         Route::get('/create', [SubscriptionCredentialController::class, 'create'])->name('create');
         Route::post('/', [SubscriptionCredentialController::class, 'store'])->name('store');
+        Route::get('/{credential}', [SubscriptionCredentialController::class, 'show'])->name('show');
         Route::get('/{credential}/edit', [SubscriptionCredentialController::class, 'edit'])->name('edit');
         Route::put('/{credential}', [SubscriptionCredentialController::class, 'update'])->name('update');
         Route::delete('/{credential}', [SubscriptionCredentialController::class, 'destroy'])->name('destroy');
-        Route::get('/available', [SubscriptionCredentialController::class, 'available'])->name('available');
-        Route::get('/assigned', [SubscriptionCredentialController::class, 'assigned'])->name('assigned');
-        Route::post('/{credential}/unassign', [SubscriptionCredentialController::class, 'unassign'])->name('unassign');
-    });
 
-    // Orders
+        // AJAX Routes for credential management
+        Route::post('/{credential}/assign', [SubscriptionCredentialController::class, 'assign'])->name('assign');
+        Route::post('/{credential}/unassign', [SubscriptionCredentialController::class, 'unassign'])->name('unassign');
+        Route::post('/{credential}/block', [SubscriptionCredentialController::class, 'block'])->name('block');
+        Route::post('/{credential}/make-available', [SubscriptionCredentialController::class, 'makeAvailable'])->name('make-available');
+        Route::get('/{credential}/reveal-password', [SubscriptionCredentialController::class, 'revealPassword'])->name('reveal-password');
+        Route::get('/{credential}/reveal-pin', [SubscriptionCredentialController::class, 'revealPin'])->name('reveal-pin');
+    });
+    // Order Management Routes
     Route::prefix('orders')->name('orders.')->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
-        Route::get('/pending', [OrderController::class, 'pending'])->name('pending');
-        Route::get('/completed', [OrderController::class, 'completed'])->name('completed');
-        Route::get('/cancelled', [OrderController::class, 'cancelled'])->name('cancelled');
+        Route::get('/create', [OrderController::class, 'create'])->name('create');
+        Route::post('/', [OrderController::class, 'store'])->name('store');
         Route::get('/{order}', [OrderController::class, 'show'])->name('show');
-        Route::post('/{order}/update-status', [OrderController::class, 'updateStatus'])->name('update-status');
+        Route::get('/{order}/edit', [OrderController::class, 'edit'])->name('edit');
+        Route::put('/{order}', [OrderController::class, 'update'])->name('update');
         Route::delete('/{order}', [OrderController::class, 'destroy'])->name('destroy');
+        Route::post('/{order}/update-payment-status', [OrderController::class, 'updatePaymentStatus'])->name('update-payment-status');
+        Route::post('/{order}/update-status', [OrderController::class, 'updateStatus'])->name('update-status');
+        Route::get('/statistics/get', [OrderController::class, 'getStatistics'])->name('statistics');
     });
+
 
     // User Subscriptions
     Route::prefix('subscriptions')->name('subscriptions.')->group(function () {
@@ -111,6 +127,20 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
         Route::put('/{user}', [UserController::class, 'update'])->name('update');
         Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy');
         Route::post('/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('toggle-status');
+    });
+
+    // User Profile Management Routes
+    Route::prefix('user-profiles')->name('user-profiles.')->group(function () {
+        Route::get('/', [UserProfileController::class, 'index'])->name('index');
+        Route::get('/create', [UserProfileController::class, 'create'])->name('create');
+        Route::post('/', [UserProfileController::class, 'store'])->name('store');
+        Route::get('/{userProfile}', [UserProfileController::class, 'show'])->name('show');
+        Route::get('/{userProfile}/edit', [UserProfileController::class, 'edit'])->name('edit');
+        Route::put('/{userProfile}', [UserProfileController::class, 'update'])->name('update');
+        Route::delete('/{userProfile}', [UserProfileController::class, 'destroy'])->name('destroy');
+        Route::post('/{userProfile}/toggle-status', [UserProfileController::class, 'toggleStatus'])->name('toggle-status');
+        Route::post('/{userProfile}/verify-email', [UserProfileController::class, 'verifyEmail'])->name('verify-email');
+        Route::get('/{userProfile}/statistics', [UserProfileController::class, 'getStatistics'])->name('statistics');
     });
 
     // Coupons
