@@ -64,6 +64,11 @@ class Platform extends Model
         return $this->hasMany(Review::class);
     }
 
+    public function userTokens()
+    {
+        return $this->hasMany(UserToken::class);
+    }
+
     // Scopes
     public function scopeActive($query)
     {

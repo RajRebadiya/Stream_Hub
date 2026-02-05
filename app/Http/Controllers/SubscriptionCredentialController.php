@@ -113,7 +113,7 @@ class SubscriptionCredentialController extends Controller
     {
         $plans = SubscriptionPlan::with('platform')->active()->get();
         $users = User::orderBy('name')->get();
-
+        
         return view('admin.credentials.create', compact('plans', 'users'));
     }
 
@@ -162,7 +162,7 @@ class SubscriptionCredentialController extends Controller
         $credential->load(['subscriptionPlan.platform']);
         $plans = SubscriptionPlan::with('platform')->active()->get();
         $users = User::orderBy('name')->get();
-
+        
         return view('admin.credentials.edit', compact('credential', 'plans', 'users'));
     }
 

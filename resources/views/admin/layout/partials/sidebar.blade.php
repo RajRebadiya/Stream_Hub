@@ -80,6 +80,7 @@
             <ul class="side-nav">
                 <!-- Admin Sidebar Menu Structure -->
 
+                @if(Auth::user()->is_admin == 1)
                 <li class="side-nav-item">
                     <a href="{{ route('dashboard') }}" class="side-nav-link">
                         <span class="menu-icon"><i class="ti ti-dashboard"></i></span>
@@ -107,6 +108,7 @@
                         </ul>
                     </div>
                 </li>
+                @endif
 
                 <li class="side-nav-item">
                     <a href="{{ route('admin.access') }}" class="side-nav-link">
@@ -115,6 +117,7 @@
                     </a>
                 </li>
 
+                @if(Auth::user()->is_admin == 1)
                 <!-- Subscription Plans -->
                 <li class="side-nav-item">
                     <a data-bs-toggle="collapse" href="#sidebarPlans" aria-expanded="false" aria-controls="sidebarPlans"
@@ -400,6 +403,7 @@
                         </ul>
                     </div>
                 </li>
+                @endif
 
                 <!-- Logout -->
                 <li class="side-nav-item">

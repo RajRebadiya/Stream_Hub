@@ -83,13 +83,14 @@
              </div>
 
 
-
+             @if(Auth::user()->is_admin == 1)
              <div class="topbar-item d-none d-sm-flex">
                  <button class="topbar-link btn-theme-setting" data-bs-toggle="offcanvas"
                      data-bs-target="#theme-settings-offcanvas" type="button">
                      <i class="ti ti-settings topbar-link-icon"></i>
                  </button>
              </div>
+             @endif
 
 
 
@@ -101,8 +102,8 @@
                              class="rounded-circle me-lg-2 d-flex" alt="user-image" />
                          <div class="d-lg-flex align-items-center gap-1 d-none">
                              <span>
-                                 <h5 class="my-0 lh-1 pro-username">David Dev</h5>
-                                 <span class="fs-xs lh-1">Admin Head</span>
+                                 <h5 class="my-0 lh-1 pro-username">{{ Auth::user()->name }}</h5>
+                                 {{-- <span class="fs-xs lh-1">Admin Head</span> --}}
                              </span>
                              <i class="ti ti-chevron-down align-middle"></i>
                          </div>
@@ -114,38 +115,10 @@
                          </div>
 
                          <!-- My Profile -->
-                         <a href="#!" class="dropdown-item">
+                         <a href="{{ route('admin.user-profiles.view') }}" class="dropdown-item">
                              <i class="ti ti-user-circle me-1 fs-lg align-middle"></i>
                              <span class="align-middle">Profile</span>
                          </a>
-
-                         <!-- Notifications -->
-                         <a href="javascript:void(0);" class="dropdown-item">
-                             <i class="ti ti-bell-ringing me-1 fs-lg align-middle"></i>
-                             <span class="align-middle">Notifications</span>
-                         </a>
-
-                         <!-- Settings -->
-                         <a href="javascript:void(0);" class="dropdown-item">
-                             <i class="ti ti-settings-2 me-1 fs-lg align-middle"></i>
-                             <span class="align-middle">Account Settings</span>
-                         </a>
-
-                         <!-- Support -->
-                         <a href="javascript:void(0);" class="dropdown-item">
-                             <i class="ti ti-headset me-1 fs-lg align-middle"></i>
-                             <span class="align-middle">Support Center</span>
-                         </a>
-
-                         <!-- Divider -->
-                         <div class="dropdown-divider"></div>
-
-                         <!-- Lock -->
-                         <a href="auth-lock-screen.html" class="dropdown-item">
-                             <i class="ti ti-lock me-1 fs-lg align-middle"></i>
-                             <span class="align-middle">Lock Screen</span>
-                         </a>
-
                          <!-- Logout -->
                          <a href="{{ route('logout') }}" class="dropdown-item fw-semibold">
                              <i class="ti ti-logout me-1 fs-lg align-middle"></i>

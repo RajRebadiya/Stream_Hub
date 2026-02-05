@@ -53,6 +53,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('access', [PlatformController::class, 'access'])->name('access');
     Route::post('platforms/{id}/generate-token', [PlatformController::class, 'generateToken'])
         ->name('platforms.generateToken');
+    Route::post('tokens/{tokenId}/revoke', [PlatformController::class, 'revokeToken'])
+        ->name('tokens.revoke');
 
 
     // Subscription Plans
@@ -70,7 +72,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::post('subscription-plans/{subscriptionPlan}/toggle-status', [SubscriptionPlanController::class, 'toggleStatus'])->name('subscription-plans.toggle-status');
     Route::post('subscription-plans/{subscriptionPlan}/update-stock', [SubscriptionPlanController::class, 'updateStock'])->name('subscription-plans.update-stock');
 
-    // Subscription Credentials Management Routes
+    // Credential routes
     Route::prefix('credentials')->name('credentials.')->group(function () {
         Route::get('/', [SubscriptionCredentialController::class, 'index'])->name('index');
         Route::get('/available', [SubscriptionCredentialController::class, 'available'])->name('available');
@@ -82,7 +84,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
         Route::put('/{credential}', [SubscriptionCredentialController::class, 'update'])->name('update');
         Route::delete('/{credential}', [SubscriptionCredentialController::class, 'destroy'])->name('destroy');
 
-        // AJAX Routes for credential management
+        // AJAX endpoints
         Route::post('/{credential}/assign', [SubscriptionCredentialController::class, 'assign'])->name('assign');
         Route::post('/{credential}/unassign', [SubscriptionCredentialController::class, 'unassign'])->name('unassign');
         Route::post('/{credential}/block', [SubscriptionCredentialController::class, 'block'])->name('block');
@@ -132,6 +134,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     // User Profile Management Routes
     Route::prefix('user-profiles')->name('user-profiles.')->group(function () {
         Route::get('/', [UserProfileController::class, 'index'])->name('index');
+        Route::get('/my-profile', [UserProfileController::class, 'viewProfile'])->name('view');
         Route::get('/create', [UserProfileController::class, 'create'])->name('create');
         Route::post('/', [UserProfileController::class, 'store'])->name('store');
         Route::get('/{userProfile}', [UserProfileController::class, 'show'])->name('show');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Platform;
+use App\Models\UserToken;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
@@ -23,11 +24,20 @@ class PlatformController extends Controller
     }
     public function access()
     {
-        $platforms = Platform::orderBy('sort_order', 'asc')
+        $user = Auth::user();
+        
+        // Fetch all tokens for the logged-in user with platform details
+        $tokens = UserToken::where('user_id', $user->id)
+            ->with('platform')
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        return view('admin.platforms.access', compact('platforms'));
+        // Also get platforms for generate token functionality
+        $platforms = Platform::orderBy('sort_order', 'asc')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('admin.platforms.access', compact('tokens', 'platforms', 'user'));
     }
 
     public function generateToken(Request $request, $id)
@@ -50,39 +60,71 @@ class PlatformController extends Controller
                 'message' => 'Daily token generation limit reached (3 per day)'
             ], 429);
         }
-        // dd($platform , $user);
+
         $email = $user->email;
         $ip = $request->ip();
-
-        // dd($email, $ip);
         $time = now()->timestamp;
 
         $rawData = $platform->token . '|' . $email . '|' . $ip . '|' . $time;
 
-
         // 🔐 DECRYPTABLE TOKEN
         $token = $rawData;
-        // dd($token);
-
-        // 🔐 NON-DECRYPTABLE TOKEN
+        // 🔐 NON-DECRYPTABLE TOKEN (commented option)
         // $token = hash_hmac('sha256', $rawData, config('app.key'));
 
+        // 📌 Mark previous tokens as inactive
+        UserToken::forUserAndPlatform($user->id, $platform->id)
+            ->active()
+            ->update(['status' => 'inactive']);
+
+        // ✨ Create new token record in database
+        $userToken = UserToken::create([
+            'user_id' => $user->id,
+            'platform_id' => $platform->id,
+            'token' => $token,
+            'ip_address' => $ip,
+            'status' => 'active',
+            'expires_at' => now()->addDays(30), // Token expires in 30 days
+        ]);
+
+        // Update user stats
         $user->user_token = $token;
-        // ➕ Increase count
         $user->token_generate_count += 1;
         $user->token_generate_date = $today;
-        $user->save();
         $user->save();
 
         return response()->json([
             'status' => true,
             'token' => $token,
             'time' => $time,
-            'remaining' => 3 - $user->token_generate_count
+            'remaining' => 3 - $user->token_generate_count,
+            'token_id' => $userToken->id,
+            'expires_at' => $userToken->expires_at
         ]);
     }
 
 
+
+    public function revokeToken($tokenId)
+    {
+        $token = UserToken::findOrFail($tokenId);
+
+        // Check if token belongs to current user
+        if ($token->user_id !== Auth::id()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Unauthorized'
+            ], 403);
+        }
+
+        // Mark token as inactive
+        $token->update(['status' => 'inactive']);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Token has been revoked successfully'
+        ]);
+    }
 
     /**
      * Show the form for creating a new resource.

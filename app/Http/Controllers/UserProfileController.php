@@ -8,9 +8,21 @@ use App\Models\UserProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Auth;
 
 class UserProfileController extends Controller
 {
+    /**
+     * Display the logged in user's profile
+     */
+    public function viewProfile()
+    {
+        $user = Auth::user();
+        $profile = $user->profile;
+
+        return view('admin.user-profiles.user_profile', compact('user', 'profile'));
+    }
+
     /**
      * Display a listing of the resource.
      */

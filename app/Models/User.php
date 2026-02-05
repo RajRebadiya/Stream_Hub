@@ -90,6 +90,11 @@ class User extends Authenticatable
         return $this->hasMany(SubscriptionCredential::class, 'assigned_to_user_id');
     }
 
+    public function tokens()
+    {
+        return $this->hasMany(UserToken::class);
+    }
+
     /**
      * Scope a query to only include users with active profiles.
      */
