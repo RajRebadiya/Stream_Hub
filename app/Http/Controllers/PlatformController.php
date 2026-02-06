@@ -84,6 +84,7 @@ class PlatformController extends Controller
             'token' => $token,
             'ip_address' => $ip,
             'status' => 'active',
+            'use_status' => 0, // 0 = not used, 1 = already used
             'expires_at' => now()->addDays(30), // Token expires in 30 days
         ]);
 
@@ -103,6 +104,76 @@ class PlatformController extends Controller
         ]);
     }
 
+    /**
+     * Verify token and mark it as used
+     */
+    public function verifyToken(Request $request)
+    {
+        $validated = $request->validate([
+            'token' => 'required|string',
+            'platform_id' => 'required|integer|exists:platforms,id'
+        ]);
+
+        // Find the token
+        $userToken = UserToken::where('token', $validated['token'])
+            ->where('platform_id', $validated['platform_id'])
+            ->first();
+
+            // dd($userToken);
+
+        // Check if token exists
+        if (!$userToken) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Invalid token'
+            ], 401);
+        }
+
+        // Check if token has expired
+        if ($userToken->expires_at && now()->isAfter($userToken->expires_at)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Token has expired'
+            ], 401);
+        }
+
+        // Check if token status is active
+        if ($userToken->status !== 'active') {
+            return response()->json([
+                'status' => false,
+                'message' => 'Token is not active'
+            ], 401);
+        }
+
+        // Check if token is already used
+        if ($userToken->use_status === 1) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Token is already in use'
+            ], 403);
+        }
+
+        // ✨ Check if user is already logged in (user_status must be 1)
+        // $user = $userToken->user;
+
+        // if ($user->status !== 1) {
+        //     return response()->json([
+        //         'status' => false,
+        //         'message' => 'User already logged in'
+        //     ], 403);
+        // }
+
+        // ✨ Mark token as used (use_status = 1)
+        $userToken->update(['use_status' => 1]);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Token verified successfully',
+            'user_id' => $userToken->user_id,
+            'platform_id' => $userToken->platform_id,
+            'verified_at' => now(),
+        ]);
+    }
 
 
     public function revokeToken($tokenId)

@@ -15,6 +15,7 @@ class UserToken extends Model
         'token',
         'ip_address',
         'status',
+        'use_status',
         'expires_at',
     ];
 
