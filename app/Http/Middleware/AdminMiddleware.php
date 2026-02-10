@@ -13,11 +13,10 @@ class AdminMiddleware
             return redirect()->route('login');
         }
 
-        // Add your admin check logic here
-        // For example, check if user has admin role
-        // if (!auth()->user()->is_admin) {
-        //     abort(403, 'Unauthorized access');
-        // }
+        // Redirect non-admin users to the admin 'access' page
+        if (!auth()->user()->is_admin) {
+            return redirect()->route('admin.access');
+        }
 
         return $next($request);
     }

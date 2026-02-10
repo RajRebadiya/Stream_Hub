@@ -32,8 +32,13 @@ class PlatformController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        // Also get platforms for generate token functionality
-        $platforms = Platform::orderBy('sort_order', 'asc')
+        // Only get platforms that the user actually has subscriptions for
+        $platforms = Platform::whereHas('subscriptionPlans', function ($q) use ($user) {
+                $q->whereHas('userSubscriptions', function ($q2) use ($user) {
+                    $q2->where('user_id', $user->id);
+                });
+            })
+            ->orderBy('sort_order', 'asc')
             ->orderBy('created_at', 'desc')
             ->get();
 

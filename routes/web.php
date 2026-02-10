@@ -29,7 +29,16 @@ Route::post('/login', [AuthController::class, 'login']);
 // Authenticated Routes (Jo login hai)
 Route::middleware('auth')->group(function () {
     Route::any('/logout', [AuthController::class, 'logout'])->name('logout');
-    Route::get('admin/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('admin/dashboard', [DashboardController::class, 'index'])->middleware('admin')->name('dashboard');
+});
+
+// Authenticated user routes for access & token management (not admin-only)
+Route::middleware('auth')->group(function () {
+    Route::get('admin/access', [PlatformController::class, 'access'])->name('admin.access');
+    Route::post('admin/platforms/{id}/generate-token', [PlatformController::class, 'generateToken'])
+        ->name('platforms.generateToken');
+    Route::post('admin/tokens/{tokenId}/revoke', [PlatformController::class, 'revokeToken'])
+        ->name('tokens.revoke');
 });
 
 Route::get('/', function () {
@@ -50,11 +59,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
         Route::post('/{platform}/toggle-status', [PlatformController::class, 'toggleStatus'])->name('toggle-status');
     });
     Route::post('platforms/{platform}/toggle-status', [PlatformController::class, 'toggleStatus'])->name('platforms.toggle-status');
-    Route::get('access', [PlatformController::class, 'access'])->name('access');
-    Route::post('platforms/{id}/generate-token', [PlatformController::class, 'generateToken'])
-        ->name('platforms.generateToken');
-    Route::post('tokens/{tokenId}/revoke', [PlatformController::class, 'revokeToken'])
-        ->name('tokens.revoke');
+    // Access page is handled for authenticated users (not admin-only)
+    // moved: generate token and revoke endpoints are defined for authenticated users below
 
 
     // Subscription Plans

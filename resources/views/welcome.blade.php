@@ -98,6 +98,246 @@
             padding: 50px 40px 40px;
         }
 
+        /* Platform Selection Styles */
+        .platforms-grid {
+            margin: 30px 0;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .platforms-grid::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .platforms-grid::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .platforms-grid::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+
+        .platform-section {
+            margin-bottom: 35px;
+            background: linear-gradient(135deg, #f5f7ff 0%, #f0f3ff 100%);
+            border-radius: 16px;
+            padding: 20px;
+            border: 2px solid #e8edf7;
+        }
+
+        .platform-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e8e8e8;
+        }
+
+        .platform-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            object-fit: cover;
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.2);
+        }
+
+        .platform-info h4 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 700;
+            color: #2d3436;
+        }
+
+        .plan-cards {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .plan-card {
+            background: #fff;
+            border: 2px solid #e8e8e8;
+            border-radius: 12px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .plan-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .plan-card.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: #667eea;
+            color: #fff;
+        }
+
+        .plan-card.selected .plan-name,
+        .plan-card.selected .plan-duration,
+        .plan-card.selected .plan-quality,
+        .plan-card.selected .plan-price {
+            color: #fff;
+        }
+
+        .plan-details {
+            flex: 1;
+        }
+
+        .plan-name {
+            font-size: 15px;
+            font-weight: 700;
+            margin: 0 0 5px 0;
+            color: #2d3436;
+            transition: color 0.3s ease;
+        }
+
+        .plan-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 13px;
+            color: #636e72;
+        }
+
+        .plan-duration,
+        .plan-quality {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .plan-card.selected .plan-meta {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .plan-price {
+            font-size: 16px;
+            font-weight: 700;
+            color: #667eea;
+            text-align: right;
+            margin-left: 20px;
+            transition: color 0.3s ease;
+        }
+
+        .plan-card.selected .plan-price {
+            color: #fff;
+        }
+
+        .plan-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+
+        .plan-card.selected .plan-checkbox {
+            accent-color: #fff;
+        }
+
+        .selection-summary {
+            background: linear-gradient(135deg, #f5f7ff 0%, #f0f3ff 100%);
+            border: 2px solid #e8edf7;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .selection-summary.active {
+            display: block;
+        }
+
+        .summary-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #636e72;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .selected-plans-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .plan-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .plan-badge .remove {
+            cursor: pointer;
+            font-weight: bold;
+            margin-left: 4px;
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+            font-weight: 700;
+            color: #667eea;
+            font-size: 15px;
+        }
+
+        .error-message {
+            background: #ffe5e5;
+            color: #d32f2f;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: none;
+            font-size: 13px;
+            border-left: 4px solid #d32f2f;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .plans-loading {
+            text-align: center;
+            padding: 30px;
+            color: #667eea;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(102, 126, 234, 0.3);
+            border-radius: 50%;
+            border-top-color: #667eea;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
         .auth-tabs {
             display: flex;
             gap: 10px;
@@ -1131,10 +1371,14 @@
 
                 <!-- Register Form -->
                 <div class="auth-form-wrapper" id="registerForm">
-                    <h3>Create Account</h3>
-                    <p class="auth-subtitle">Join thousands of happy subscribers</p>
+                    <h3>Create Your Account</h3>
+                    <p class="auth-subtitle">Select platforms you want to subscribe to</p>
 
-                    <form class="auth-form">
+                    <form class="auth-form" id="registerFormElement">
+                        <!-- Error Message -->
+                        <div class="error-message" id="registerError"></div>
+
+                        <!-- Personal Information -->
                         <div class="form-group">
                             <label for="registerName">
                                 <i class="fa fa-user"></i> Full Name
@@ -1156,7 +1400,8 @@
                                 <i class="fa fa-phone"></i> Mobile Number
                             </label>
                             <input type="tel" id="registerMobile" class="form-control"
-                                placeholder="Enter your mobile number" required>
+                                placeholder="Enter 10-digit mobile number" required maxlength="10"
+                                pattern="[0-9]{10}">
                         </div>
 
                         <div class="form-group">
@@ -1164,29 +1409,46 @@
                                 <i class="fa fa-lock"></i> Password
                             </label>
                             <input type="password" id="registerPassword" class="form-control"
-                                placeholder="Create a password" required>
+                                placeholder="Create a strong password (min 8 characters)" required minlength="8">
+                        </div>
+
+                        <!-- Platform Selection -->
+                        <div class="form-group">
+                            <label style="margin-bottom: 15px;">
+                                <i class="fa fa-tv" style="color: #667eea; margin-right: 5px;"></i>
+                                <strong>Select Streaming Platforms</strong>
+                                <span style="color: #d32f2f;">*</span>
+                            </label>
+                            <div class="platforms-grid" id="platformsGrid">
+                                <div class="plans-loading">
+                                    <div class="spinner"></div>
+                                    <p>Loading available plans...</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Selection Summary -->
+                        <div class="selection-summary" id="selectionSummary">
+                            <div class="summary-title">Selected Plans</div>
+                            <div class="selected-plans-list" id="selectedPlansList"></div>
+                            <div class="summary-total">
+                                <span>Total Amount:</span>
+                                <span id="totalAmount">₹0</span>
+                            </div>
                         </div>
 
                         <div class="form-group">
                             <label class="terms-checkbox">
-                                <input type="checkbox" required> I agree to the <a href="#">Terms &
+                                <input type="checkbox" id="registerTerms" required>
+                                I agree to the <a href="#"
+                                    style="color: #667eea; text-decoration: none; font-weight: 600;">Terms &
                                     Conditions</a>
                             </label>
                         </div>
 
-                        <button type="submit" class="btn-auth">Create Account</button>
+                        <button type="submit" class="btn-auth" id="registerSubmitBtn">Create Account &
+                            Subscribe</button>
 
-                        <div class="social-login">
-                            <p>Or register with</p>
-                            <div class="social-buttons">
-                                <button type="button" class="btn-social google">
-                                    <i class="fab fa-google"></i> Google
-                                </button>
-                                <button type="button" class="btn-social facebook">
-                                    <i class="fab fa-facebook-f"></i> Facebook
-                                </button>
-                            </div>
-                        </div>
                     </form>
                 </div>
             </div>
@@ -1265,14 +1527,6 @@
                 registerForm.removeClass('active');
             });
 
-            // Switch to Register tab
-            registerTab.on('click', function() {
-                registerTab.addClass('active');
-                loginTab.removeClass('active');
-                registerForm.addClass('active');
-                loginForm.removeClass('active');
-            });
-
             // Handle Login Form Submit
             loginForm.find('form').on('submit', function(e) {
                 e.preventDefault();
@@ -1288,7 +1542,7 @@
 
                 // AJAX Request
                 $.ajax({
-                    url: '/login',
+                    url: '/api/login',
                     type: 'POST',
                     dataType: 'json',
                     headers: {
@@ -1337,29 +1591,183 @@
                 });
             });
 
+            // Switch to Register tab
+            registerTab.on('click', function() {
+                registerTab.addClass('active');
+                loginTab.removeClass('active');
+                registerForm.addClass('active');
+                loginForm.removeClass('active');
+                loadAvailablePlans();
+            });
+
+            // Load available plans from API
+            function loadAvailablePlans() {
+                $.ajax({
+                    url: '/api/registration-plans',
+                    type: 'GET',
+                    success: function(response) {
+                        if (response.success) {
+                            displayPlans(response.data);
+                        }
+                    },
+                    error: function() {
+                        $('#platformsGrid').html(
+                            '<p style="text-align: center; color: #d32f2f;">Failed to load plans. Please try again.</p>'
+                            );
+                    }
+                });
+            }
+
+            // Display plans in a professional grid
+            function displayPlans(platforms) {
+                let html = '';
+
+                platforms.forEach((platform, index) => {
+                    if (platform.plans.length === 0) return;
+
+                    html += `
+                        <div class="platform-section">
+                            <div class="platform-header">
+                                ${platform.platform_logo ? `<img src="${platform.platform_logo}" alt="${platform.platform_name}" class="platform-logo">` : ''}
+                                <div class="platform-info">
+                                    <h4>${platform.platform_name}</h4>
+                                </div>
+                            </div>
+                            <div class="plan-cards">
+                    `;
+
+                    platform.plans.forEach((plan) => {
+                        const discountBadge = plan.discount_percentage > 0 ?
+                            `<span style="background: #ff6b6b; color: #fff; padding: 2px 8px; border-radius: 50px; font-size: 11px; font-weight: 700;">-${plan.discount_percentage}%</span>` :
+                            '';
+
+                        html += `
+                            <div class="plan-card" data-plan-id="${plan.id}" data-price="${plan.selling_price}">
+                                <div class="plan-details">
+                                    <p class="plan-name">${plan.name.replace(/^([^-]+)-\s*/, '$1')} ${discountBadge}</p>
+                                    <div class="plan-meta">
+                                        <span class="plan-duration">
+                                            <i class="fa fa-calendar"></i> ${plan.duration_months} month${plan.duration_months > 1 ? 's' : ''}
+                                        </span>
+                                        <span class="plan-quality">
+                                            <i class="fa fa-star"></i> ${plan.quality}
+                                        </span>
+                                        <span>
+                                            <i class="fa fa-tv"></i> ${plan.max_screens} screens
+                                        </span>
+                                    </div>
+                                </div>
+                                <span class="plan-price">₹${parseFloat(plan.selling_price).toFixed(0)}</span>
+                                <input type="checkbox" class="plan-checkbox" style="margin-left: 15px;">
+                            </div>
+                        `;
+                    });
+
+                    html += `
+                            </div>
+                        </div>
+                    `;
+                });
+
+                $('#platformsGrid').html(html);
+
+                // Add click handler to plan cards
+                $('.plan-card').on('click', function(e) {
+                    // Don't toggle if clicking the checkbox
+                    if (e.target.tagName === 'INPUT') return;
+                    $(this).find('.plan-checkbox').prop('checked', !$(this).find('.plan-checkbox').is(
+                        ':checked')).trigger('change');
+                });
+
+                // Add change handler to checkboxes
+                $('.plan-checkbox').on('change', function() {
+                    $(this).closest('.plan-card').toggleClass('selected');
+                    updateSelectionSummary();
+                });
+            }
+
+            // Update selection summary
+            let selectedPlans = {};
+
+            function updateSelectionSummary() {
+                selectedPlans = {};
+                let totalAmount = 0;
+                let selectedCount = 0;
+
+                $('.plan-card.selected').each(function() {
+                    const planId = $(this).data('plan-id');
+                    const planName = $(this).find('.plan-name').text().trim();
+                    const price = parseFloat($(this).data('price'));
+
+                    selectedPlans[planId] = {
+                        name: planName,
+                        price: price
+                    };
+
+                    totalAmount += price;
+                    selectedCount++;
+                });
+
+                // Update summary display
+                if (selectedCount > 0) {
+                    $('#selectionSummary').addClass('active');
+
+                    let plansList = '';
+                    Object.entries(selectedPlans).forEach(([id, data]) => {
+                        plansList += `
+                            <div class="plan-badge">
+                                ${data.name.replace(/\s*-\s*[0-9]+%/, '')}
+                                <span class="remove" onclick="removePlan(${id})">✕</span>
+                            </div>
+                        `;
+                    });
+
+                    $('#selectedPlansList').html(plansList);
+                    $('#totalAmount').text('₹' + totalAmount.toFixed(0));
+                } else {
+                    $('#selectionSummary').removeClass('active');
+                }
+            }
+
+            // Remove plan from selection
+            window.removePlan = function(planId) {
+                $(`.plan-card[data-plan-id="${planId}"] .plan-checkbox`).prop('checked', false).trigger(
+                    'change');
+            };
+
             // Handle Register Form Submit
-            registerForm.find('form').on('submit', function(e) {
+            $('#registerFormElement').on('submit', function(e) {
                 e.preventDefault();
 
                 const name = $('#registerName').val();
                 const email = $('#registerEmail').val();
                 const mobile = $('#registerMobile').val();
                 const password = $('#registerPassword').val();
-                const terms = registerForm.find('.terms-checkbox input').is(':checked');
+                const terms = $('#registerTerms').is(':checked');
+                const subscriptionPlanIds = Object.keys(selectedPlans).map(id => parseInt(id));
 
+                // Clear previous error
+                $('#registerError').removeClass('show').text('');
+
+                // Validation
                 if (!terms) {
-                    alert('Please agree to the Terms & Conditions');
+                    showRegisterError('Please agree to the Terms & Conditions');
+                    return;
+                }
+
+                if (subscriptionPlanIds.length === 0) {
+                    showRegisterError('Please select at least one streaming platform to subscribe');
                     return;
                 }
 
                 // Show loading state
-                const submitBtn = $(this).find('.btn-auth');
+                const submitBtn = $('#registerSubmitBtn');
                 const originalText = submitBtn.text();
                 submitBtn.text('Creating Account...').prop('disabled', true);
 
                 // AJAX Request
                 $.ajax({
-                    url: '/register',
+                    url: '/api/register',
                     type: 'POST',
                     dataType: 'json',
                     headers: {
@@ -1369,23 +1777,33 @@
                         name: name,
                         email: email,
                         mobile: mobile,
-                        password: password
+                        password: password,
+                        subscription_plan_ids: subscriptionPlanIds
                     },
                     success: function(data) {
                         if (data.success) {
-                            alert('Registration successful!');
-                            window.location.href = data.redirect || '/dashboard';
+                            // CLOSE MODAL FIRST
+                            authModal.removeClass('active');
+                            $('body').css('overflow', '');
+
+                            // RESET BUTTON
+                            submitBtn.text(originalText).prop('disabled', false);
+
+                            // SHOW SUCCESS MESSAGE
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Account Created Successfully!',
+                                html: `<p>Welcome ${name}!</p><p>Your ${subscriptionPlanIds.length} streaming subscription${subscriptionPlanIds.length > 1 ? 's' : ''} ${subscriptionPlanIds.length > 1 ? 'are' : 'is'} now active.</p>`,
+                                timer: 2000,
+                                showConfirmButton: false,
+                                allowOutsideClick: false,
+                                allowEscapeKey: false
+                            }).then(() => {
+                                // REDIRECT TO DASHBOARD
+                                window.location.href = data.redirect || '/dashboard';
+                            });
                         } else {
-                            let errorMessage = 'Registration failed:\n';
-                            if (data.errors) {
-                                $.each(data.errors, function(key, value) {
-                                    errorMessage += '- ' + value[0] + '\n';
-                                });
-                            } else {
-                                errorMessage = data.message ||
-                                    'Please check your information and try again.';
-                            }
-                            alert(errorMessage);
+                            showRegisterError(data.message || 'Registration failed');
                             submitBtn.text(originalText).prop('disabled', false);
                         }
                     },
@@ -1397,18 +1815,24 @@
                             if (xhr.responseJSON.message) {
                                 errorMessage = xhr.responseJSON.message;
                             } else if (xhr.responseJSON.errors) {
-                                errorMessage = 'Registration failed:\n';
+                                let errors = [];
                                 $.each(xhr.responseJSON.errors, function(key, value) {
-                                    errorMessage += '- ' + value[0] + '\n';
+                                    errors.push('- ' + value[0]);
                                 });
+                                errorMessage = errors.join('\n');
                             }
                         }
 
-                        alert(errorMessage);
+                        showRegisterError(errorMessage);
                         submitBtn.text(originalText).prop('disabled', false);
                     }
                 });
             });
+
+            // Show error message
+            function showRegisterError(message) {
+                $('#registerError').text(message).addClass('show');
+            }
 
             // Social Login Handlers (Optional)
             $('.btn-social').on('click', function(e) {
