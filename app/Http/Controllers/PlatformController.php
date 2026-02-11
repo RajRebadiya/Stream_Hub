@@ -25,7 +25,7 @@ class PlatformController extends Controller
     public function access()
     {
         $user = Auth::user();
-        
+
         // Fetch all tokens for the logged-in user with platform details
         $tokens = UserToken::where('user_id', $user->id)
             ->with('platform')
@@ -34,10 +34,10 @@ class PlatformController extends Controller
 
         // Only get platforms that the user actually has subscriptions for
         $platforms = Platform::whereHas('subscriptionPlans', function ($q) use ($user) {
-                $q->whereHas('userSubscriptions', function ($q2) use ($user) {
-                    $q2->where('user_id', $user->id);
-                });
-            })
+            $q->whereHas('userSubscriptions', function ($q2) use ($user) {
+                $q2->where('user_id', $user->id);
+            });
+        })
             ->orderBy('sort_order', 'asc')
             ->orderBy('created_at', 'desc')
             ->get();
@@ -45,6 +45,10 @@ class PlatformController extends Controller
         return view('admin.platforms.access', compact('tokens', 'platforms', 'user'));
     }
 
+
+    /**
+     * Generate encrypted token that cannot be decrypted/tampered
+     */
     public function generateToken(Request $request, $id)
     {
         $platform = Platform::findOrFail($id);
@@ -70,12 +74,34 @@ class PlatformController extends Controller
         $ip = $request->ip();
         $time = now()->timestamp;
 
-        $rawData = $platform->token . '|' . $email . '|' . $ip . '|' . $time;
+        // 🔐 Generate random salt for additional security
+        $salt = bin2hex(random_bytes(16));
 
-        // 🔐 DECRYPTABLE TOKEN
-        $token = $rawData;
-        // 🔐 NON-DECRYPTABLE TOKEN (commented option)
-        // $token = hash_hmac('sha256', $rawData, config('app.key'));
+        // Store cookie data separately (this will be returned after verification)
+        $cookieData = $platform->token; // Original cookie string from platform
+
+        $rawData = $platform->id . '|' . $user->id . '|' . $email . '|' . $ip . '|' . $time . '|' . $salt;
+
+        // 🔐 ENCRYPTED TOKEN using AES-256-CBC (cannot be decrypted without key)
+        $encryptionKey = config('app.key');
+        $iv = random_bytes(16); // Initialization vector
+
+        $encryptedData = openssl_encrypt(
+            $rawData,
+            'AES-256-CBC',
+            $encryptionKey,
+            0,
+            $iv
+        );
+
+        // Combine IV with encrypted data and encode in base64
+        $token = base64_encode($iv . '::' . $encryptedData);
+
+        // Generate HMAC signature to prevent tampering
+        $signature = hash_hmac('sha256', $token, $encryptionKey);
+
+        // Final token format: signature.token
+        $finalToken = $signature . '.' . $token;
 
         // 📌 Mark previous tokens as inactive
         UserToken::forUserAndPlatform($user->id, $platform->id)
@@ -86,7 +112,8 @@ class PlatformController extends Controller
         $userToken = UserToken::create([
             'user_id' => $user->id,
             'platform_id' => $platform->id,
-            'token' => $token,
+            'token' => $finalToken,
+            'cookie_data' => $cookieData, // 🆕 Store cookie data separately
             'ip_address' => $ip,
             'status' => 'active',
             'use_status' => 0, // 0 = not used, 1 = already used
@@ -94,14 +121,14 @@ class PlatformController extends Controller
         ]);
 
         // Update user stats
-        $user->user_token = $token;
+        $user->user_token = $finalToken;
         $user->token_generate_count += 1;
         $user->token_generate_date = $today;
         $user->save();
 
         return response()->json([
             'status' => true,
-            'token' => $token,
+            'token' => $finalToken,
             'time' => $time,
             'remaining' => 3 - $user->token_generate_count,
             'token_id' => $userToken->id,
@@ -110,7 +137,8 @@ class PlatformController extends Controller
     }
 
     /**
-     * Verify token and mark it as used
+     * Verify encrypted token with tamper detection
+     * 🆕 Returns cookie data after successful verification
      */
     public function verifyToken(Request $request)
     {
@@ -119,12 +147,34 @@ class PlatformController extends Controller
             'platform_id' => 'required|integer|exists:platforms,id'
         ]);
 
-        // Find the token
-        $userToken = UserToken::where('token', $validated['token'])
+        $receivedToken = $validated['token'];
+
+        // 🔐 Verify token format (signature.token)
+        if (substr_count($receivedToken, '.') !== 1) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Invalid token format'
+            ], 401);
+        }
+
+        // Split signature and token
+        list($receivedSignature, $tokenData) = explode('.', $receivedToken, 2);
+
+        // 🔐 Verify HMAC signature to detect tampering
+        $encryptionKey = config('app.key');
+        $expectedSignature = hash_hmac('sha256', $tokenData, $encryptionKey);
+
+        if (!hash_equals($expectedSignature, $receivedSignature)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Token has been tampered with'
+            ], 401);
+        }
+
+        // Find the token in database
+        $userToken = UserToken::where('token', $receivedToken)
             ->where('platform_id', $validated['platform_id'])
             ->first();
-
-            // dd($userToken);
 
         // Check if token exists
         if (!$userToken) {
@@ -158,29 +208,71 @@ class PlatformController extends Controller
             ], 403);
         }
 
-        // ✨ Check if user is already logged in (user_status must be 1)
-        // $user = $userToken->user;
+        // 🔐 Optional: Decrypt and verify token data integrity
+        try {
+            $decodedToken = base64_decode($tokenData);
 
-        // if ($user->status !== 1) {
-        //     return response()->json([
-        //         'status' => false,
-        //         'message' => 'User already logged in'
-        //     ], 403);
-        // }
+            if (substr_count($decodedToken, '::') !== 1) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Token structure invalid'
+                ], 401);
+            }
+
+            list($iv, $encryptedData) = explode('::', $decodedToken, 2);
+
+            $decryptedData = openssl_decrypt(
+                $encryptedData,
+                'AES-256-CBC',
+                $encryptionKey,
+                0,
+                $iv
+            );
+
+            if ($decryptedData === false) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Token decryption failed'
+                ], 401);
+            }
+
+            // Verify decrypted data structure
+            $parts = explode('|', $decryptedData);
+            if (count($parts) !== 6) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Token data corrupted'
+                ], 401);
+            }
+
+            // Verify platform_id and user_id match
+            if ($parts[0] != $validated['platform_id'] || $parts[1] != $userToken->user_id) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Token validation failed'
+                ], 401);
+            }
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Token verification error'
+            ], 401);
+        }
 
         // ✨ Mark token as used (use_status = 1)
         $userToken->update(['use_status' => 1]);
 
+        // 🆕 Return cookie data for client-side cookie setting
         return response()->json([
             'status' => true,
             'message' => 'Token verified successfully',
             'user_id' => $userToken->user_id,
             'platform_id' => $userToken->platform_id,
+            'cookie_data' => $userToken->cookie_data, // 🆕 Send cookie data back
             'verified_at' => now(),
         ]);
     }
-
-
     public function revokeToken($tokenId)
     {
         $token = UserToken::findOrFail($tokenId);

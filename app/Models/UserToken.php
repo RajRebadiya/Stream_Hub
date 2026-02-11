@@ -17,6 +17,7 @@ class UserToken extends Model
         'status',
         'use_status',
         'expires_at',
+        'cookie_data',
     ];
 
     protected $casts = [

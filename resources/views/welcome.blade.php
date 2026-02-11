@@ -611,6 +611,169 @@
 </head>
 
 <body>
+    {{-- 🔒 INLINE DEVTOOLS PROTECTION - WORKS IMMEDIATELY --}}
+    <script>
+        (function() {
+            'use strict';
+
+            let detected = false;
+
+            // 🔥 INSTANT LOGOUT FUNCTION
+            function logout() {
+                if (detected) return;
+                detected = true;
+
+                // Clear everything
+                localStorage.clear();
+                sessionStorage.clear();
+
+                // Show alert
+                alert('⚠️ Developer Tools Detected! Logging out...');
+
+                // Create and submit logout form
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '{{ route('logout') }}';
+
+                const token = document.createElement('input');
+                token.type = 'hidden';
+                token.name = '_token';
+                token.value = '{{ csrf_token() }}';
+                form.appendChild(token);
+
+                document.body.appendChild(form);
+                form.submit();
+            }
+
+            // 🔥 METHOD 1: Debugger trap (MOST EFFECTIVE)
+            setInterval(function() {
+                const start = performance.now();
+                debugger; // This pauses if DevTools is open
+                const end = performance.now();
+
+                if (end - start > 100) {
+                    logout();
+                }
+            }, 100);
+
+            // 🔥 METHOD 2: Window size detection
+            setInterval(function() {
+                const widthDiff = window.outerWidth - window.innerWidth;
+                const heightDiff = window.outerHeight - window.innerHeight;
+
+                if (widthDiff > 160 || heightDiff > 160) {
+                    logout();
+                }
+            }, 500);
+
+            // 🔥 METHOD 3: Console detection
+            const element = new Image();
+            Object.defineProperty(element, 'id', {
+                get: function() {
+                    logout();
+                }
+            });
+
+            setInterval(function() {
+                console.log('%c', element);
+                console.clear();
+            }, 1000);
+
+            // 🚫 BLOCK ALL KEYBOARD SHORTCUTS
+            document.addEventListener('keydown', function(e) {
+                // F12
+                if (e.keyCode === 123) {
+                    e.preventDefault();
+                    logout();
+                    return false;
+                }
+
+                // Ctrl+Shift+I (Inspect)
+                if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
+                    e.preventDefault();
+                    logout();
+                    return false;
+                }
+
+                // Ctrl+Shift+J (Console)
+                if (e.ctrlKey && e.shiftKey && e.keyCode === 74) {
+                    e.preventDefault();
+                    logout();
+                    return false;
+                }
+
+                // Ctrl+Shift+C (Inspect Element)
+                if (e.ctrlKey && e.shiftKey && e.keyCode === 67) {
+                    e.preventDefault();
+                    logout();
+                    return false;
+                }
+
+                // Ctrl+U (View Source)
+                if (e.ctrlKey && e.keyCode === 85) {
+                    e.preventDefault();
+                    return false;
+                }
+
+                // Cmd+Option+I (Mac Inspect)
+                if (e.metaKey && e.altKey && e.keyCode === 73) {
+                    e.preventDefault();
+                    logout();
+                    return false;
+                }
+
+                // Cmd+Option+J (Mac Console)
+                if (e.metaKey && e.altKey && e.keyCode === 74) {
+                    e.preventDefault();
+                    logout();
+                    return false;
+                }
+
+                // Cmd+Option+C (Mac Inspect)
+                if (e.metaKey && e.altKey && e.keyCode === 67) {
+                    e.preventDefault();
+                    logout();
+                    return false;
+                }
+            }, true);
+
+            // 🚫 BLOCK RIGHT CLICK
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                return false;
+            }, true);
+
+            // 🚫 DISABLE SELECTION (Optional - prevents copy-paste)
+            document.addEventListener('selectstart', function(e) {
+                e.preventDefault();
+                return false;
+            });
+
+            // ✅ ALLOW COPY FOR SPECIFIC ELEMENTS/BUTTONS
+            // Block selection but allow programmatic copy (via clipboard API)
+            document.addEventListener('selectstart', (e) => {
+                // Allow selection on input fields and elements with 'allow-copy' class
+                if (e.target.tagName === 'INPUT' ||
+                    e.target.tagName === 'TEXTAREA' ||
+                    e.target.closest('.allow-copy') ||
+                    e.target.closest('[data-token]') ||
+                    e.target.closest('.copy-token-btn')) {
+                    return true; // Allow selection
+                }
+                e.preventDefault();
+                return false;
+            });
+
+            // ✅ ALLOW COPY EVENT FOR PROGRAMMATIC CLIPBOARD API
+            // Don't block copy event - let clipboard API work
+            document.addEventListener('copy', (e) => {
+                // Allow copy for clipboard API (navigator.clipboard.writeText)
+                // This won't interfere with your copy button
+                return true;
+            });
+
+        })();
+    </script>
 
     <!--[if lte IE 9]>
         <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
@@ -1613,7 +1776,7 @@
                     error: function() {
                         $('#platformsGrid').html(
                             '<p style="text-align: center; color: #d32f2f;">Failed to load plans. Please try again.</p>'
-                            );
+                        );
                     }
                 });
             }

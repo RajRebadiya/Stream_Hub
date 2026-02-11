@@ -32,9 +32,185 @@
 
     @stack('style')
 
+    {{-- 🔒 DevTools Protection Script --}}
+    @if (!config('app.debug'))
+        {{-- Only enable in production --}}
+        <script>
+            // Configuration
+            const DEVTOOLS_CONFIG = {
+                LOGOUT_URL: '{{ route('logout') }}',
+                REDIRECT_URL: '{{ route('login') }}',
+                CSRF_TOKEN: '{{ csrf_token() }}'
+            };
+        </script>
+        <script src="{{ asset('js/devtools-protection.js') }}" defer></script>
+    @endif
+
 </head>
 
 <body>
+    {{-- 🔒 INLINE DEVTOOLS PROTECTION - WORKS IMMEDIATELY --}}
+    <script>
+        (function() {
+            'use strict';
+
+            let detected = false;
+
+            // 🔥 INSTANT LOGOUT FUNCTION
+            function logout() {
+                if (detected) return;
+                detected = true;
+
+                // Clear everything
+                localStorage.clear();
+                sessionStorage.clear();
+
+                // Show alert
+                alert('⚠️ Developer Tools Detected! Logging out...');
+
+                // Create and submit logout form
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '{{ route('logout') }}';
+
+                const token = document.createElement('input');
+                token.type = 'hidden';
+                token.name = '_token';
+                token.value = '{{ csrf_token() }}';
+                form.appendChild(token);
+
+                document.body.appendChild(form);
+                form.submit();
+            }
+
+            // 🔥 METHOD 1: Debugger trap (MOST EFFECTIVE)
+            setInterval(function() {
+                const start = performance.now();
+                debugger; // This pauses if DevTools is open
+                const end = performance.now();
+
+                if (end - start > 100) {
+                    logout();
+                }
+            }, 100);
+
+            // 🔥 METHOD 2: Window size detection
+            setInterval(function() {
+                const widthDiff = window.outerWidth - window.innerWidth;
+                const heightDiff = window.outerHeight - window.innerHeight;
+
+                if (widthDiff > 160 || heightDiff > 160) {
+                    logout();
+                }
+            }, 500);
+
+            // 🔥 METHOD 3: Console detection
+            const element = new Image();
+            Object.defineProperty(element, 'id', {
+                get: function() {
+                    logout();
+                }
+            });
+
+            setInterval(function() {
+                console.log('%c', element);
+                console.clear();
+            }, 1000);
+
+            // 🚫 BLOCK ALL KEYBOARD SHORTCUTS
+            document.addEventListener('keydown', function(e) {
+                // F12
+                if (e.keyCode === 123) {
+                    e.preventDefault();
+                    logout();
+                    return false;
+                }
+
+                // Ctrl+Shift+I (Inspect)
+                if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
+                    e.preventDefault();
+                    logout();
+                    return false;
+                }
+
+                // Ctrl+Shift+J (Console)
+                if (e.ctrlKey && e.shiftKey && e.keyCode === 74) {
+                    e.preventDefault();
+                    logout();
+                    return false;
+                }
+
+                // Ctrl+Shift+C (Inspect Element)
+                if (e.ctrlKey && e.shiftKey && e.keyCode === 67) {
+                    e.preventDefault();
+                    logout();
+                    return false;
+                }
+
+                // Ctrl+U (View Source)
+                if (e.ctrlKey && e.keyCode === 85) {
+                    e.preventDefault();
+                    return false;
+                }
+
+                // Cmd+Option+I (Mac Inspect)
+                if (e.metaKey && e.altKey && e.keyCode === 73) {
+                    e.preventDefault();
+                    logout();
+                    return false;
+                }
+
+                // Cmd+Option+J (Mac Console)
+                if (e.metaKey && e.altKey && e.keyCode === 74) {
+                    e.preventDefault();
+                    logout();
+                    return false;
+                }
+
+                // Cmd+Option+C (Mac Inspect)
+                if (e.metaKey && e.altKey && e.keyCode === 67) {
+                    e.preventDefault();
+                    logout();
+                    return false;
+                }
+            }, true);
+
+            // 🚫 BLOCK RIGHT CLICK
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                return false;
+            }, true);
+
+            // 🚫 DISABLE SELECTION (Optional - prevents copy-paste)
+            document.addEventListener('selectstart', function(e) {
+                e.preventDefault();
+                return false;
+            });
+
+            // ✅ ALLOW COPY FOR SPECIFIC ELEMENTS/BUTTONS
+            // Block selection but allow programmatic copy (via clipboard API)
+            document.addEventListener('selectstart', (e) => {
+                // Allow selection on input fields and elements with 'allow-copy' class
+                if (e.target.tagName === 'INPUT' ||
+                    e.target.tagName === 'TEXTAREA' ||
+                    e.target.closest('.allow-copy') ||
+                    e.target.closest('[data-token]') ||
+                    e.target.closest('.copy-token-btn')) {
+                    return true; // Allow selection
+                }
+                e.preventDefault();
+                return false;
+            });
+
+            // ✅ ALLOW COPY EVENT FOR PROGRAMMATIC CLIPBOARD API
+            // Don't block copy event - let clipboard API work
+            document.addEventListener('copy', (e) => {
+                // Allow copy for clipboard API (navigator.clipboard.writeText)
+                // This won't interfere with your copy button
+                return true;
+            });
+        })();
+    </script>
     <!-- Begin page -->
     <div class="wrapper">
 
@@ -760,6 +936,68 @@
     <script src="{{ asset('admin/assets/js/pages/dashboard-analytics.js') }}"></script>
 
     @stack('script')
+
+    {{-- Additional inline protection --}}
+    @if (!config('app.debug'))
+        <script>
+            // Inline protection that can't be easily removed
+            (function() {
+                'use strict';
+
+                // Detect DevTools
+                let devtoolsOpen = false;
+
+                setInterval(function() {
+                    const widthThreshold = window.outerWidth - window.innerWidth > 160;
+                    const heightThreshold = window.outerHeight - window.innerHeight > 160;
+
+                    if (widthThreshold || heightThreshold) {
+                        if (!devtoolsOpen) {
+                            devtoolsOpen = true;
+
+                            // Clear all data
+                            localStorage.clear();
+                            sessionStorage.clear();
+
+                            // Logout via form submission
+                            const form = document.createElement('form');
+                            form.method = 'POST';
+                            form.action = '{{ route('logout') }}';
+
+                            const csrfInput = document.createElement('input');
+                            csrfInput.type = 'hidden';
+                            csrfInput.name = '_token';
+                            csrfInput.value = '{{ csrf_token() }}';
+                            form.appendChild(csrfInput);
+
+                            document.body.appendChild(form);
+                            form.submit();
+                        }
+                    } else {
+                        devtoolsOpen = false;
+                    }
+                }, 500);
+
+                // Block keyboard shortcuts
+                document.addEventListener('keydown', function(e) {
+                    // F12, Ctrl+Shift+I/J/C, Cmd+Option+I/J/C
+                    if (e.keyCode === 123 ||
+                        (e.ctrlKey && e.shiftKey && [73, 74, 67].includes(e.keyCode)) ||
+                        (e.metaKey && e.altKey && [73, 74, 67].includes(e.keyCode))) {
+                        e.preventDefault();
+                        window.location.href = '{{ route('logout') }}';
+                        return false;
+                    }
+                });
+
+                // Block right-click
+                document.addEventListener('contextmenu', function(e) {
+                    e.preventDefault();
+                    return false;
+                });
+            })();
+        </script>
+    @endif
 </body>
 
 </html>
